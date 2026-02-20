@@ -1,16 +1,15 @@
 {
-  "name": "Raja Browser",
-  "short_name": "Raja",
+  "name": "Raja HD Player",
+  "short_name": "RajaPlayer",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#075e54",
-  "theme_color": "#075e54",
+  "background_color": "#000000",
+  "theme_color": "#e50914",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/190/190411.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ]
 }
-
