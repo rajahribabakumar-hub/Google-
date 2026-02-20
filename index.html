@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raja Browser</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #ece5dd; margin: 0; padding-bottom: 50px; }
+        .nav { background: #075e54; color: white; padding: 15px; font-size: 22px; font-weight: bold; position: sticky; top: 0; z-index: 100; }
+        .hero { background: white; margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s; }
+        .box:active { transform: scale(0.95); }
+        .box img { width: 45px; margin-bottom: 10px; }
+        .box span { display: block; font-weight: bold; color: #333; }
+        .btn-bell { background: #ff5722; color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 16px; font-weight: bold; margin: 20px 0; cursor: pointer; box-shadow: 0 4px 15px rgba(255,87,34,0.3); }
+        #ad-area { background: #fff; margin: 15px; padding: 15px; border-radius: 10px; border: 2px dashed #075e54; min-height: 100px; }
+    </style>
+</head>
+<body>
+
+    <div class="nav">Raja Premium Browser</div>
+
+    <div class="hero">
+        <h3>स्वागत है भाई!</h3>
+        <p>बिना रुकावट ब्राउजिंग के लिए नोटिफिकेशन चालू करें</p>
+        <button class="btn-bell" onclick="askPermission()">🔔 Notification On करें</button>
+    </div>
+
+    <div class="grid">
+        <div class="box" onclick="location.href='https://www.facebook.com'">
+            <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png">
+            <span>Facebook</span>
+        </div>
+        <div class="box" onclick="location.href='https://www.youtube.com'">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
+            <span>YouTube</span>
+        </div>
+        <div class="box" onclick="location.href='https://www.google.com'">
+            <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png">
+            <span>Google</span>
+        </div>
+        <div class="box" onclick="location.href='https://www.instagram.com'">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png">
+            <span>Instagram</span>
+        </div>
+    </div>
+
+    <div id="ad-area">
+        <strong style="color: #075e54;">आज का खास विज्ञापन</strong>
+        <div id="display-ad" style="margin-top: 10px;">लोड हो रहा है...</div>
+    </div>
+
+    <script>
+        // सर्विस वर्कर रजिस्टर करें
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Raja Engine Active!'))
+            .catch(err => console.log('Error:', err));
+        }
+
+        // नोटिफिकेशन की इजाजत मांगें
+        function askPermission() {
+            Notification.requestPermission().then(res => {
+                if(res === 'granted') {
+                    alert('बधाई हो! अब आपको हर अपडेट मिलेगा।');
+                } else {
+                    alert('भाई, नोटिफिकेशन ऑन नहीं करोगे तो मजा कैसे आएगा?');
+                }
+            });
+        }
+
+        // विज्ञापन अपडेट करने वाला सिस्टम
+        setInterval(() => {
+            fetch('notify-control.json')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('display-ad').innerHTML = `<h4>${data.title}</h4><p>${data.body}</p>`;
+            });
+        }, 5000); // हर 5 सेकंड में अपडेट होगा
+    </script>
+</body>
+</html>
