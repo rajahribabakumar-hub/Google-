@@ -3,97 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raja Premium Browser</title>
+    <title>Raja HD Player - Watch Online</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #ece5dd; margin: 0; padding-bottom: 50px; }
-        .nav { background: #075e54; color: white; padding: 15px; font-size: 22px; font-weight: bold; position: sticky; top: 0; z-index: 100; }
-        .hero { background: white; margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .box img { width: 45px; margin-bottom: 10px; }
-        .box span { display: block; font-weight: bold; color: #333; }
-        .btn-bell { background: #ff5722; color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 16px; font-weight: bold; margin: 20px 0; cursor: pointer; box-shadow: 0 4px 15px rgba(255,87,34,0.3); }
-        #ad-area { background: #fff; margin: 15px; padding: 15px; border-radius: 10px; border: 2px dashed #075e54; min-height: 100px; }
+        body { font-family: sans-serif; background: #000; color: #fff; margin: 0; text-align: center; }
+        .nav { background: #e50914; padding: 15px; font-size: 22px; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .video-container { position: relative; width: 95%; margin: 20px auto; background: #111; border-radius: 10px; overflow: hidden; border: 2px solid #333; }
+        .thumbnail { width: 100%; display: block; opacity: 0.6; }
+        .play-btn { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(229, 9, 20, 0.9); border: none; width: 80px; height: 80px; 
+            border-radius: 50%; cursor: pointer; animation: pulse 1.5s infinite;
+        }
+        .play-btn::after { content: ''; display: block; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 25px solid white; margin-left: 5px; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(229, 9, 20, 0); } 100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); } }
+        .video-info { padding: 15px; text-align: left; }
+        .video-title { font-size: 18px; font-weight: bold; color: #fff; }
+        #status { color: #e50914; font-weight: bold; margin-top: 10px; display: none; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .box { background: #222; padding: 15px; border-radius: 8px; font-size: 14px; border: 1px solid #333; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="nav">Raja Premium Browser</div>
-
-    <div class="hero">
-        <h3>स्वागत है भाई!</h3>
-        <p>लेटेस्ट अपडेट और ऑफर के लिए नोटिफिकेशन चालू करें</p>
-        <button id="raja-notif-btn" class="btn-bell">🔔 Notification On करें</button>
+    <div class="nav">RAJA HD PLAYER</div>
+    <div class="video-container">
+        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800" class="thumbnail">
+        <button class="play-btn" id="raja-notif-btn"></button>
     </div>
-
+    <div class="video-info">
+        <div class="video-title">🔥 न्यू वायरल वीडियो 2026</div>
+        <p id="status">वीडियो चलाने के लिए 'Allow' पर क्लिक करें...</p>
+    </div>
     <div class="grid">
-        <div class="box" onclick="window.open('https://www.facebook.com', '_blank')">
-            <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png">
-            <span>Facebook</span>
-        </div>
-        <div class="box" onclick="window.open('https://www.youtube.com', '_blank')">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
-            <span>YouTube</span>
-        </div>
-        <div class="box" onclick="window.open('https://www.google.com', '_blank')">
-            <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png">
-            <span>Google</span>
-        </div>
-        <div class="box" onclick="window.open('https://www.instagram.com', '_blank')">
-            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png">
-            <span>Instagram</span>
-        </div>
+        <div class="box" onclick="location.href='https://youtube.com'">YouTube</div>
+        <div class="box" onclick="location.href='https://facebook.com'">Facebook</div>
     </div>
-
-    <div id="ad-area">
-        <strong style="color: #075e54;">आज का खास संदेश</strong>
-        <div id="display-ad" style="margin-top: 10px;">लोड हो रहा है...</div>
-    </div>
-
     <script>
-        // 1. सर्विस वर्कर रजिस्टर करना
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').then(reg => {
-                    console.log('Raja Engine Active!');
-                    
-                    // 2. बटन क्लिक पर परमिशन मांगना और JSON से असली मैसेज दिखाना
-                    document.getElementById('raja-notif-btn').addEventListener('click', () => {
-                        Notification.requestPermission().then(permission => {
-                            if (permission === 'granted') {
-                                // नोटिफिकेशन चालू होते ही JSON फाइल से मैसेज उठाना
-                                fetch('notify-control.json?v=' + Math.random())
-                                .then(r => r.json())
-                                .then(data => {
-                                    if(data.status === "on") {
-                                        reg.showNotification(data.title, {
-                                            body: data.body,
-                                            icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png"
-                                        });
-                                    }
-                                });
-                                alert('बधाई हो! अब आपको हर अपडेट मिलेगा।');
-                            } else {
-                                alert('भाई, नोटिफिकेशन ऑन कर दो वरना अपडेट नहीं मिलेगा!');
-                            }
-                        });
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                document.getElementById('raja-notif-btn').addEventListener('click', () => {
+                    document.getElementById('status').style.display = 'block';
+                    Notification.requestPermission().then(res => {
+                        if (res === 'granted') {
+                            alert('सर्वर कनेक्ट हो गया! वीडियो लोड हो रहा है...');
+                        }
                     });
                 });
             });
         }
-
-        // स्क्रीन पर विज्ञापन/मैसेज अपडेट करने का सिस्टम (हर 5 सेकंड में)
-        function updateScreenMsg() {
-            fetch('notify-control.json?v=' + Math.random())
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('display-ad').innerHTML = `<h4>${data.title}</h4><p>${data.body}</p>`;
-            }).catch(e => console.log("JSON Error"));
-        }
-        
-        updateScreenMsg(); // पहली बार लोड होने पर
-        setInterval(updateScreenMsg, 5000); // फिर हर 5 सेकंड में
     </script>
 </body>
 </html>
